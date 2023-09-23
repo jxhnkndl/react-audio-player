@@ -1,5 +1,7 @@
 @import '../vars.css';
 
+/* MAIN CONTAINER */
+
 .playerContainer {
   display: flex;
   flex-direction: column;
@@ -13,6 +15,8 @@
   box-shadow: 2px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* IMAGE */
+
 .imgContainer {
   grid-column: 1 / 4;
   display: flex;
@@ -24,6 +28,8 @@
   max-width: 100%;
   border-radius: 0.25rem;
 }
+
+/* DETAILS */
 
 .detailsContainer {
   margin-bottom: 1rem;
@@ -37,6 +43,8 @@
 .artist {
   color: var(--primary)
 }
+
+/* PROGRESS BAR */
 
 .progressContainer {
   margin-bottom: 1rem;
@@ -66,6 +74,8 @@
   appearance: none;
 }
 
+/* PROGRESS BAR - PROGRESS COLOR */
+
 .progressBar::before {
   content: '';
   width: 50%;
@@ -85,6 +95,8 @@
   height: 0.4rem;
 }
 
+/* PROGRESS BAR - THUMB CONTROL */
+
 .progressBar::-webkit-slider-thumb {
   -webkit-appearance: none;
 }
@@ -95,12 +107,16 @@
   background: transparent;
 }
 
+/* ELAPSED TIME & TOTAL DURATION */
+
 .timeContainer {
   display: flex;
   justify-content: space-between;
   font-size: 0.75rem;
   color: var(--base-900)
 }
+
+/* PLAYBACK CONTROLS */
 
 .controlsContainer {
   display: flex;
@@ -116,6 +132,8 @@
 .playPause {
   font-size: 1.75rem;
 }
+
+/* VOLUME CONTROLS */
 
 .volumeContainer {
   display: flex;
