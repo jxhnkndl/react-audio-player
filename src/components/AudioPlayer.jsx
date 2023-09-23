@@ -1,4 +1,5 @@
 //#region *** MAIN IMPORTS ***
+import { useRef, useState, useEffect } from 'react';
 import styles from './AudioPlayer.module.css';
 import { trackData } from '../trackData';
 //#endregion
@@ -14,13 +15,32 @@ import {
   FaVolumeOff,
   FaVolumeDown,
   FaVolumeUp,
-  FaVolumeMute
+  FaVolumeMute,
 } from 'react-icons/fa';
 //#endregion
 
 export const AudioPlayer = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  // References
+  const audioRef = useRef(null);
+
+  // Toggle play/pause
+  const togglePlayPause = () => {
+    const playing = isPlaying;
+
+    setIsPlaying(prev => !prev);
+
+    if (!playing) {
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
+    }
+  }
+
   return (
     <section className={styles.playerContainer}>
+      <audio ref={audioRef} src={trackData[1].audio} />
       <figure className={styles.imgContainer}>
         <img
           className={styles.img}
@@ -42,7 +62,11 @@ export const AudioPlayer = () => {
       <div className={styles.controlsContainer}>
         <FaFastBackward />
         <FaBackward />
-        <FaPlay className={styles.playPause} />
+        {isPlaying ? (
+          <FaPause className={styles.playPause} onClick={togglePlayPause} />
+        ) : (
+          <FaPlay className={styles.playPause} onClick={togglePlayPause} />
+        )}
         <FaForward />
         <FaFastForward />
       </div>
