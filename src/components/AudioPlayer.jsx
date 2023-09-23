@@ -28,11 +28,11 @@ export const AudioPlayer = () => {
 
   // References
   const audioRef = useRef(null);
+  const progressRef = useRef(null);
 
-  useEffect(() => {}, [
-    audioRef?.current?.loadedmetadata,
-    audioRef?.current?.readyState,
-  ]);
+  useEffect(() => {
+    progressRef.current.max = duration;
+  }, [duration]);
 
   // Load track metadata
   const loadTrack = () => {
@@ -41,7 +41,7 @@ export const AudioPlayer = () => {
 
     setDuration(totalSeconds);
     setTimeElapsed(totalSecondsElapsed);
-  }
+  };
 
   // Toggle play/pause
   const togglePlayPause = () => {
@@ -54,6 +54,25 @@ export const AudioPlayer = () => {
     } else {
       audioRef.current.pause();
     }
+  };
+
+  // Update tracking position in song using progress bar
+  const handleProgress = () => {
+    // Set the audio track's current time as the progress bar's value
+    audioRef.current.currentTime = progressRef.current.value;
+
+    // Calculate percentage of song complete to feed to CSS
+    const percentComplete = (audioRef.current.currentTime / duration) * 100;
+
+    // Update CSS variable with percent of song complete
+    // This is what moves the colored, pre-thumb progress bar
+    progressRef.current.style.setProperty(
+      '--time-elapsed',
+      `${percentComplete}%`
+    );
+
+    // Update time elapsed with progress bar's value
+    setTimeElapsed(progressRef.current.value);
   };
 
   // Format displayed duration and time elapsed
@@ -69,7 +88,7 @@ export const AudioPlayer = () => {
     }
 
     return '0:00';
-  }
+  };
 
   return (
     <section className={styles.playerContainer}>
@@ -90,7 +109,13 @@ export const AudioPlayer = () => {
         <p className={styles.artist}>{trackData[1].artist}</p>
       </div>
       <div className={styles.progressContainer}>
-        <input className={styles.progressBar} type="range" />
+        <input
+          ref={progressRef}
+          className={styles.progressBar}
+          type="range"
+          defaultValue={0}
+          onChange={handleProgress}
+        />
         <div className={styles.timeContainer}>
           <p>{formatTime(timeElapsed)}</p>
           <p>{formatTime(duration)}</p>
