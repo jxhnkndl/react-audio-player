@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;600&family=Barlow:wght@400;600&display=swap');
+
+@import './vars.css';
+
 * {
   margin: 0;
   padding: 0;
@@ -5,5 +9,6 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: var(--font-size);
+  font-family: var(--font-main);
 }

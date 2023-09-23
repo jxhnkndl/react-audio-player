@@ -1,0 +1,13 @@
+:root {
+  --font-heading: 'Barlow', 'Trebuchet MS', Tahoma, sans-serif;
+  --font-main: 'Albert Sans', Arial, sans-serif;
+  --font-size: 16px;
+  --base-100: #F2F2F2;
+  --base-300: #727273;
+  --base-500: #404040;
+  --base-700: #262626;
+  --base-900: #262626
+  --primary: ##FFD505;
+  --secondary: #F58D0E;
+  --accent: #3BCAEB
+}
