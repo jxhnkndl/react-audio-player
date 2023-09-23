@@ -4,4 +4,80 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 80%;
+  margin: 0 auto;
+  background-color: var(--base-100);
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 2px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.imgContainer {
+  grid-column: 1 / 4;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.img {
+  max-width: 100%;
+  border-radius: 0.25rem;
+}
+
+.detailsContainer {
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-family: var(--font-heading);
+  margin-bottom: 0.25rem;
+}
+
+.artist {
+  color: var(--primary)
+}
+
+.progressContainer {
+  margin-bottom: 1rem;
+}
+
+.progressBar {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.timeContainer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--base-900)
+}
+
+.controlsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  padding: 0.5rem;
+  margin: 0 auto 1.5rem auto;
+  font-size: 1.5rem;
+  color: var(--base-900)
+}
+
+.playPause {
+  font-size: 1.75rem;
+}
+
+.volumeContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto 2rem auto;
+}
+
+.volumeSlider {
+  width: 100%;
+  margin-left: 0.5rem;
 }
