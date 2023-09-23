@@ -20,27 +20,64 @@ import {
 //#endregion
 
 export const AudioPlayer = () => {
+  const [tracks, setTracks] = useState(trackData);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(50);
+  const [duration, setDuration] = useState(0);
+  const [timeElapsed, setTimeElapsed] = useState(0);
 
   // References
   const audioRef = useRef(null);
+
+  useEffect(() => {}, [
+    audioRef?.current?.loadedmetadata,
+    audioRef?.current?.readyState,
+  ]);
+
+  // Load track metadata
+  const loadTrack = () => {
+    const totalSeconds = Math.floor(audioRef?.current?.duration);
+    const totalSecondsElapsed = Math.floor(audioRef?.current?.currentTime);
+
+    setDuration(totalSeconds);
+    setTimeElapsed(totalSecondsElapsed);
+  }
 
   // Toggle play/pause
   const togglePlayPause = () => {
     const playing = isPlaying;
 
-    setIsPlaying(prev => !prev);
+    setIsPlaying((prev) => !prev);
 
     if (!playing) {
       audioRef.current.play();
     } else {
       audioRef.current.pause();
     }
+  };
+
+  // Format displayed duration and time elapsed
+  const formatTime = (time) => {
+    if (time && !isNaN(time)) {
+      let mins = Math.floor(time / 60);
+      let secs = Math.floor(time % 60);
+
+      // Add leading 0 to seconds when less than 10 remain
+      secs = secs < 10 ? `0${secs}` : secs;
+
+      return `${mins}:${secs}`;
+    }
+
+    return '0:00';
   }
 
   return (
     <section className={styles.playerContainer}>
-      <audio ref={audioRef} src={trackData[1].audio} />
+      <audio
+        ref={audioRef}
+        src={trackData[1].audio}
+        onLoadedMetadata={loadTrack}
+      />
       <figure className={styles.imgContainer}>
         <img
           className={styles.img}
@@ -55,8 +92,8 @@ export const AudioPlayer = () => {
       <div className={styles.progressContainer}>
         <input className={styles.progressBar} type="range" />
         <div className={styles.timeContainer}>
-          <p>00:00</p>
-          <p>3:15</p>
+          <p>{formatTime(timeElapsed)}</p>
+          <p>{formatTime(duration)}</p>
         </div>
       </div>
       <div className={styles.controlsContainer}>
