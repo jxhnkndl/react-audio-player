@@ -1,3 +1,7 @@
 @import '../vars.css';
 
-.playerContainer {}
+.playerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
