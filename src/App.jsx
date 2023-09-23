@@ -1,9 +1,11 @@
+import styles from './App.module.css';
+
 import { AudioPlayer } from "./components/AudioPlayer"
 
 export const App = () => {
   return (
-    <div>
+    <main className={styles.appContainer}>
       <AudioPlayer />
-    </div>
+    </main>
   )
 }
