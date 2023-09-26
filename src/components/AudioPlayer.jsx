@@ -29,6 +29,7 @@ export const AudioPlayer = () => {
   const audioRef = useRef(null);
   const progressRef = useRef(null);
   const volumeRef = useRef(null);
+  const animationRef = useRef(null);
 
   // Set progress and volume slider starting values
   useEffect(() => {
@@ -51,19 +52,39 @@ export const AudioPlayer = () => {
 
     setIsPlaying((prev) => !prev);
 
+    // requestAnimationFrame() works a lot like set interval except it tells the browser to run a particular animation at a particular interval. It can be cleared the same way a named interval can.
+
     if (!playing) {
       audioRef.current.play();
+      animationRef.current = requestAnimationFrame(syncProgressBar);
     } else {
       audioRef.current.pause();
+      cancelAnimationFrame(animationRef.current);
     }
   };
 
   // Update tracking position in song using progress bar
   const handleProgress = () => {
-    // Set the audio track's current time as the progress bar's value
+    // Set audio player's current time to MATCH the progress bar's current value
     audioRef.current.currentTime = progressRef.current.value;
 
-    // Calculate percentage of song complete to feed to CSS
+    updateCurrentTime();
+  };
+
+  // Synchronize the slider thumb animation with the current audio position
+  const syncProgressBar = () => {
+    // Update progress bar's value to MATCH audio player's progress
+    progressRef.current.value = audioRef.current.currentTime;
+
+    updateCurrentTime();
+
+    // When function is complete, browser should call the function again and repaint the UI; this process continues looping until the user hits PAUSE and the animation frame gets terminated. 
+    requestAnimationFrame(syncProgressBar);
+  };
+
+  // Set progress bar's width to match percentage of song complete
+  const updateCurrentTime = () => {
+    // Calculate current time as a percentage
     const percentComplete = (audioRef.current.currentTime / duration) * 100;
 
     // Update CSS variable with percent of song complete
@@ -73,22 +94,21 @@ export const AudioPlayer = () => {
       `${percentComplete}%`
     );
 
-    // Update time elapsed with progress bar's value
     setTimeElapsed(progressRef.current.value);
   };
 
   // Synchronize volume slider and audio player's volume property
   const handleVolume = () => {
-    // Set current volume as 
+    // Set current volume as
     audioRef.current.volume = volumeRef.current.value / 100;
 
     // Calculate percentage of song complete to feed to CSS
-    const percentVolume = audioRef.current.volume  * 100;
+    const percentVolume = audioRef.current.volume * 100;
 
     // Update CSS variable with volume percentage to update UI
     volumeRef.current.style.setProperty('--volume-level', `${percentVolume}%`);
 
-    console.log(volumeRef.current.value)
+    console.log(volumeRef.current.value);
   };
 
   // Format displayed duration and time elapsed
