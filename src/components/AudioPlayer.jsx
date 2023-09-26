@@ -22,16 +22,18 @@ import {
 export const AudioPlayer = () => {
   const [tracks, setTracks] = useState(trackData);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(50);
   const [duration, setDuration] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   // References
   const audioRef = useRef(null);
   const progressRef = useRef(null);
+  const volumeRef = useRef(null);
 
+  // Set progress and volume slider starting values
   useEffect(() => {
     progressRef.current.max = duration;
+    volumeRef.current.style.setProperty('--volume-level', '50%');
   }, [duration]);
 
   // Load track metadata
@@ -73,6 +75,20 @@ export const AudioPlayer = () => {
 
     // Update time elapsed with progress bar's value
     setTimeElapsed(progressRef.current.value);
+  };
+
+  // Synchronize volume slider and audio player's volume property
+  const handleVolume = () => {
+    // Set current volume as 
+    audioRef.current.volume = volumeRef.current.value / 100;
+
+    // Calculate percentage of song complete to feed to CSS
+    const percentVolume = audioRef.current.volume  * 100;
+
+    // Update CSS variable with volume percentage to update UI
+    volumeRef.current.style.setProperty('--volume-level', `${percentVolume}%`);
+
+    console.log(volumeRef.current.value)
   };
 
   // Format displayed duration and time elapsed
@@ -134,7 +150,13 @@ export const AudioPlayer = () => {
       </div>
       <div className={styles.volumeContainer}>
         <FaVolumeDown />
-        <input className={styles.volumeSlider} type="range" />
+        <input
+          ref={volumeRef}
+          className={styles.volumeSlider}
+          type="range"
+          onChange={handleVolume}
+          defaultValue={50}
+        />
       </div>
     </section>
   );
