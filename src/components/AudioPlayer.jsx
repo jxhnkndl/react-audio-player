@@ -20,7 +20,8 @@ import {
 //#endregion
 
 export const AudioPlayer = () => {
-  const [tracks, setTracks] = useState(trackData);
+  const [currentTrack, setCurrentTrack] = useState(trackData[0]);
+  const [trackIndex, setTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -35,7 +36,14 @@ export const AudioPlayer = () => {
   useEffect(() => {
     progressRef.current.max = duration;
     volumeRef.current.style.setProperty('--volume-level', '50%');
-  }, [duration]);
+  }, [trackIndex, duration]);
+
+  // Autoplay next/previous track if current track was playing
+  useEffect(() => {
+    if (isPlaying) {
+      audioRef.current.play()
+    }
+  }, [currentTrack, isPlaying]);
 
   // Load track metadata
   const loadTrack = () => {
@@ -78,7 +86,7 @@ export const AudioPlayer = () => {
 
     updateCurrentTime();
 
-    // When function is complete, browser should call the function again and repaint the UI; this process continues looping until the user hits PAUSE and the animation frame gets terminated. 
+    // When function is complete, browser should call the function again and repaint the UI; this process continues looping until the user hits PAUSE and the animation frame gets terminated.
     requestAnimationFrame(syncProgressBar);
   };
 
@@ -96,6 +104,54 @@ export const AudioPlayer = () => {
 
     setTimeElapsed(progressRef.current.value);
   };
+
+  // Advance to next track
+  const nextTrack = () => {
+    if (trackIndex >= trackData.length - 1) {
+      setTrackIndex(0);
+      setCurrentTrack(trackData[0]);
+    } else {
+      const next = trackIndex + 1;
+      setTrackIndex(next);
+      setCurrentTrack(trackData[next]);
+    }
+
+    if (isPlaying) {
+      console.log(audioRef.current)
+      audioRef.current.play();
+    }
+  };
+
+  // Rewind to previous track
+  const prevTrack = () => {
+    if (trackIndex === 0) {
+      const prev = trackData.length - 1;
+      setTrackIndex(prev);
+      setCurrentTrack(trackData[prev]);
+
+      if (isPlaying) {
+        audioRef.current.play();
+      }
+    } else {
+      const prev = trackIndex - 1;
+      setTrackIndex(prev);
+      setCurrentTrack(trackData[prev]);
+
+      if (isPlaying) {
+        audioRef.current.play();
+      }
+    }
+  };
+
+  // Rewind 10 seconds
+  const rewind = () => {
+    audioRef.current.currentTime -= 10;
+  }
+
+  // Fast forward 10 seconds
+  const fastForward = () => {
+    audioRef.current.currentTime += 10;
+  }
 
   // Synchronize volume slider and audio player's volume property
   const handleVolume = () => {
@@ -130,19 +186,19 @@ export const AudioPlayer = () => {
     <section className={styles.playerContainer}>
       <audio
         ref={audioRef}
-        src={trackData[1].audio}
+        src={currentTrack.audio}
         onLoadedMetadata={loadTrack}
       />
       <figure className={styles.imgContainer}>
         <img
           className={styles.img}
-          src={trackData[1].image}
+          src={currentTrack.image}
           alt={`Temp alt text`}
         />
       </figure>
       <div className={styles.detailsContainer}>
-        <h2 className={styles.title}>{trackData[1].title}</h2>
-        <p className={styles.artist}>{trackData[1].artist}</p>
+        <h2 className={styles.title}>{currentTrack.title}</h2>
+        <p className={styles.artist}>{currentTrack.artist}</p>
       </div>
       <div className={styles.progressContainer}>
         <input
@@ -158,15 +214,15 @@ export const AudioPlayer = () => {
         </div>
       </div>
       <div className={styles.controlsContainer}>
-        <FaFastBackward />
-        <FaBackward />
+        <FaFastBackward onClick={prevTrack} />
+        <FaBackward onClick={rewind} />
         {isPlaying ? (
           <FaPause className={styles.playPause} onClick={togglePlayPause} />
         ) : (
           <FaPlay className={styles.playPause} onClick={togglePlayPause} />
         )}
-        <FaForward />
-        <FaFastForward />
+        <FaForward onClick={fastForward} />
+        <FaFastForward onClick={nextTrack} />
       </div>
       <div className={styles.volumeContainer}>
         <FaVolumeDown />
